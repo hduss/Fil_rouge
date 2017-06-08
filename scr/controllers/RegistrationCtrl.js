@@ -1,4 +1,9 @@
-const isValid = require('../services/isValid.js')
+const isValid = require('../services/isValid.js');
+const yaml = require('yamljs');
+const crypto = require('crypto');
+
+const config = yaml.load('./../config/configDb.yml');
+
 
 class RegistrationCtrl {
 
@@ -17,33 +22,61 @@ class RegistrationCtrl {
 		// instance of isValid
 		const IsValid = new isValid();
 
-		let validLastName = IsValidLastName(req.body.lastname);
+		let validLastName = IsValid.validLastName(req.body.lastname);
 		let validFirstName = IsValid.validFirstName(req.body.firstname);
 		let validMail = IsValid.validMail(req.body.mail);
 		let validPseudo = IsValid.validPseudo(req.body.pseudo);
 		let validPass = IsValid.validPassword(req.body.pass);
 		let validPassCompare = IsValid.validComparePassword(req.body.pass, req.body.passconfirm);
-		let validAge = IsValidAge(req.body.age);
+		let validAge = IsValid.validAge(req.body.age);
+
 
 		console.log('POST OK');
 
 		// all verifications for the registration form 
-		if (validMail) {
+		/*if (validMail) {
 			VALID = true;
 
 			if (validPseudo) {
 				VALID = true;
 
-				if (validPass && validPassCompare) {
+				if (validFirstName && validLastName && validAge) {
 
-					VALID = true;
-					if (validFirstName && validLastName && validAge) {
+
+
+					VALID = true;*/
+					if (validPass && validPassCompare) {
+//--------------------------change in DTO DAO--------------------
+
+						//CRYPTAGE PASSWORD ! 
+						const passToCrypt = req.body.pass;
+
+						const algoCrypt = 'aes256';
+
+						const key = config.default.crypt.key;
+						
+
+						var cipher = crypto.createCipher(algoCrypt,key);
+						var crypted = cipher.update(passToCrypt,'utf8','hex');
+						crypted += cipher.final('hex');
+
+
+						console.log(crypted);
+
+						// DECRYPT PASSWORD
+						var decipher = crypto.createDecipher(algoCrypt,key);
+						var dec = decipher.update(crypted,'hex','utf8');
+						dec += decipher.final('utf8');
+
+						console.log(dec);
+						
+//--------------------------change in DTO DAO--------------------
 
 						VALID = true;
 					}else{
 
 						VALID = false;
-					}
+					}/*
 				}else{
 
 					VALID = false;
@@ -64,6 +97,9 @@ class RegistrationCtrl {
 			console.log('EVERYTHINGGUCCI !!');
 			// send data in Database
 			// envoi en BDD
+
+			res.redirect('/');
+			// NEW USER
 		}else{
 
 			res.redirect('/registration');
@@ -71,7 +107,7 @@ class RegistrationCtrl {
 		
 		
 
-		
+		*/
 	}
 }
 

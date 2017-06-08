@@ -49,32 +49,30 @@ class isValid {
 
 	validPassword(userPassword) {
 
+		this.userPassword = userPassword;
 		
-		// string of special caracteres for valid password
-		const caracteres = "$£!§:/;.,?";
+    	//at least 8 characters, at least 1 numeric character, at least 1 lowercase letter, at least 1 uppercase letter, at least 1 special character
 
+		const regexPass = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/);
 
-		for (var i = 0; i < caracteres.length; i++) {
+		const verif = regexPass.test(this.userPassword);
 
-			// indexOf return -1 if false and return integer if true :)
-			let verif = userPassword.indexOf(caracteres[i]);
-			
-			console.log(caracteres[i]);
+		console.log(verif);
 
-			if (verif > 0  && verif.length > 8 ) {
+		if (verif) {
 
-				console.log('PASSWORD VALID');
-				return true;
+			console.log('PASSWORD VALID !!! ');
 
-			}else{
+			return true;
+		}else{
 
-				console.log('PASSWORD INVALID !!! ')
-				return false;
-			};
+			console.log('PASSWORD INVALID');
 
-
+			return false;
 		}
-}
+
+
+	}
 
 
 	
