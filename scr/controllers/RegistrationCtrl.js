@@ -1,4 +1,4 @@
-const validMail = require('../services/isValidMail.js')
+const isValid = require('../services/isValid.js')
 
 class RegistrationCtrl {
 
@@ -12,12 +12,14 @@ class RegistrationCtrl {
 
 	post(req, res) {
 
-		
+		const IsValid = new isValid();
+
+		IsValid.validPseudo(req.body.pseudo);
+		IsValid.validPassword(req.body.pass);
+		IsValid.validComparePassword(req.body.pass, req.body.passconfirm);
 
 		console.log('POST OK');
 		
-		console.log(req.body.pseudo);
-		console.log(req.body.pass);
 		
 
 		
