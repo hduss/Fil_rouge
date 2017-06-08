@@ -75,8 +75,6 @@ class isValid {
 	}
 
 
-	
-
 	validComparePassword(userPassword, verifPassword) {
 
 		if (userPassword && verifPassword && userPassword === verifPassword) {

@@ -51,7 +51,7 @@ class RegistrationCtrl {
 						//CRYPTAGE PASSWORD ! 
 						const passToCrypt = req.body.pass;
 
-						const algoCrypt = 'aes256';
+						const algoCrypt = config.default.crypt.algoCrypt;
 
 						const key = config.default.crypt.key;
 						
@@ -69,7 +69,7 @@ class RegistrationCtrl {
 						dec += decipher.final('utf8');
 
 						console.log(dec);
-						
+
 //--------------------------change in DTO DAO--------------------
 
 						VALID = true;
