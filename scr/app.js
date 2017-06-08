@@ -1,13 +1,21 @@
+
 const express = require('express');
 const mysql = require('mysql');
+
 // yamljs, parse, stringify and load functions
 const twig = require ('twig');
+
 // to read input forms
 const yaml = require('yamljs');
+
 // yaml file for database connection
 const config = yaml.load('./../config/configDb.yml');
+ 	
 
 const bodyParser = require('body-parser');
+const session = require('express-session');
+
+
 
 
 
@@ -24,22 +32,6 @@ const connection = mysql.createConnection({
 
 
 
-//IMPORT CONTROLLERS
-const registrationCtrl = require('./controllers/RegistrationCtrl.js');
-const loginCtrl = require('./controllers/LoginCtrl.js');
-const homeCtrl = require('./controllers/HomeCtrl.js');
-const seriesCtrl = require('./controllers/SeriesCtrl');
-
-
-
-// INIT CONTROLLERS
-const RegistrationCtrl = new registrationCtrl();
-const LoginCtrl = new loginCtrl();
-const HomeCtrl = new homeCtrl();
-const SeriesCtrl = new seriesCtrl();
-
-
-
 // CONNECT DB FIRST
 connection.connect((err) => {
 
@@ -48,21 +40,48 @@ connection.connect((err) => {
    		return;
  	}
 
- 	console.log('Database Connected!');
+ 	console.log('Database ' + config.default.database.dbname + ' Connected !');
 
  	// INIT SERVER AFTER DB
  	const app = express();
 
 
 
+
+	/*const urlencoderParser = bodyParser.urlencoded({extended: false});*/
+
+
  	// MIDDLEWARES
+
 
  	// bodyParser to use input submit
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({ 
-		extended: false 
+		extended: true 
 	}));
 
+
+ 	app.use(session({
+
+		secret:'secret',
+		cookie: { maxAge: 60000 }
+	}));
+
+
+
+	//IMPORT CONTROLLERS
+	const registrationCtrl = require('./controllers/RegistrationCtrl.js');
+	const loginCtrl = require('./controllers/LoginCtrl.js');
+	const homeCtrl = require('./controllers/HomeCtrl.js');
+	const seriesCtrl = require('./controllers/SeriesCtrl');
+
+
+
+	// INIT CONTROLLERS
+	const RegistrationCtrl = new registrationCtrl();
+	const LoginCtrl = new loginCtrl();
+	const HomeCtrl = new homeCtrl();
+	const SeriesCtrl = new seriesCtrl();
 
 
 
@@ -73,7 +92,7 @@ connection.connect((err) => {
 	app.post('/registration', RegistrationCtrl.post);
 
 	app.get('/login', LoginCtrl.get);
-	app.post('/login',LoginCtrl.post);
+	app.post('/login', LoginCtrl.post);
 
 	app.get('/series', SeriesCtrl.get);
 
@@ -87,7 +106,7 @@ connection.connect((err) => {
 
 	const port = process.env.PORT || config.default.server.port; 
 	 
-	app.listen(port, () => { console.log("Server Connected ! ")});
+	app.listen(port, () => { console.log('Server Connected on port : ' + port +' ! ')});
 
 
 });

@@ -1,3 +1,5 @@
+const validMail = require('../services/isValidMail.js')
+
 class RegistrationCtrl {
 
 	get(req, res) {
@@ -10,7 +12,15 @@ class RegistrationCtrl {
 
 	post(req, res) {
 
+		
+
 		console.log('POST OK');
+		
+		console.log(req.body.pseudo);
+		console.log(req.body.pass);
+		
+
+		
 	}
 }
 

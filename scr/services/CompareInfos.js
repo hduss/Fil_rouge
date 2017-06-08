@@ -1,14 +1,16 @@
 class CompareInfos {
 	
-	comparePassword(passwordEntry, passwordBd) {
+	comparePassword(passwordEntry, passwordDB) {
+
+		
 		
 	}
 
-	compareEmail(emailEntry, emailBd) {
+	compareEmail(emailEntry, emailDB) {
 
 	}
 
-	comparePseudo(pseudoEntry, psueodEmail) {
+	comparePseudo(pseudoEntry, psueudoDB) {
 
 	}
 }
