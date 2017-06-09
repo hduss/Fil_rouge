@@ -87,7 +87,7 @@ class isValid {
 
 	validFirstName(firstName) {
 
-		if (firstName && typeof firstName ==="string") {
+		if (firstName && typeof firstName === "string") {
 
 			console.log("FIRSTNAME VALID !!");
 			return true;
@@ -100,7 +100,7 @@ class isValid {
 
 	validLastName(lastName) {
 
-		if (lastName && typeof lastName ==="string") {
+		if (lastName && typeof lastName === "string") {
 			
 			console.log("LASTNAME VALID !!");
 			return true;
@@ -116,6 +116,7 @@ class isValid {
 		if (age >= 18) {
 			console.log('AGE VALID');
 			return true;
+			
 		}else{
 
 			return false;

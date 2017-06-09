@@ -45,6 +45,21 @@ connection.connect((err) => {
  	// INIT SERVER AFTER DB
  	const app = express();
 
+	/*connection.query('UPDATE users SET firstName = ? WHERE user_id = ?', ['pieuvre', "1"], (error, results, fields) => {
+	  if (error) throw error;
+	  console.log("UPDATED");
+	});*/
+
+
+ 	/*connection.query('INSERT INTO users SET firstName=?',  "JAMBONBEURRE", (error, results, fields) => {
+ 		console.log('insertion OKKKKKK!!!');
+ 	})*/
+
+	connection.query('DELETE FROM users WHERE user_id = 1', (error, results, fields) => {
+	  if (error) throw error;
+	  console.log('deleted ' + fields + ' rows');
+	});
+
 
 
 

@@ -1,6 +1,7 @@
 const isValid = require('../services/isValid.js');
 const yaml = require('yamljs');
 const crypto = require('crypto');
+const Crypto = require('../services/crypto.js');
 
 const config = yaml.load('./../config/configDb.yml');
 
@@ -34,7 +35,7 @@ class RegistrationCtrl {
 		console.log('POST OK');
 
 		// all verifications for the registration form 
-		/*if (validMail) {
+		if (validMail) {
 			VALID = true;
 
 			if (validPseudo) {
@@ -44,31 +45,42 @@ class RegistrationCtrl {
 
 
 
-					VALID = true;*/
+					VALID = true;
 					if (validPass && validPassCompare) {
 //--------------------------change in DTO DAO--------------------
 
+						const cryptPass = new Crypto(req.body.pass, config.default.crypt.algoCrypt, config.default.crypt.key );
+
+
+						cryptPass.cipher();
+
+						cryptPass.decipher();
+
+
+
+
+
 						//CRYPTAGE PASSWORD ! 
-						const passToCrypt = req.body.pass;
+						/*const passToCrypt = req.body.pass;
 
 						const algoCrypt = config.default.crypt.algoCrypt;
 
 						const key = config.default.crypt.key;
 						
 
-						var cipher = crypto.createCipher(algoCrypt,key);
-						var crypted = cipher.update(passToCrypt,'utf8','hex');
+						const cipher = crypto.createCipher(algoCrypt,key);
+						const crypted = cipher.update(passToCrypt,'utf8','hex');
 						crypted += cipher.final('hex');
 
 
 						console.log(crypted);
 
 						// DECRYPT PASSWORD
-						var decipher = crypto.createDecipher(algoCrypt,key);
-						var dec = decipher.update(crypted,'hex','utf8');
+						const decipher = crypto.createDecipher(algoCrypt,key);
+						const dec = decipher.update(crypted,'hex','utf8');
 						dec += decipher.final('utf8');
 
-						console.log(dec);
+						console.log(dec);*/
 
 //--------------------------change in DTO DAO--------------------
 
@@ -76,7 +88,7 @@ class RegistrationCtrl {
 					}else{
 
 						VALID = false;
-					}/*
+					}
 				}else{
 
 					VALID = false;
@@ -107,7 +119,7 @@ class RegistrationCtrl {
 		
 		
 
-		*/
+		
 	}
 }
 
