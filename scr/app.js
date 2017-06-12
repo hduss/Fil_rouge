@@ -55,10 +55,10 @@ connection.connect((err) => {
  		console.log('insertion OKKKKKK!!!');
  	})*/
 
-	connection.query('DELETE FROM users WHERE user_id = 1', (error, results, fields) => {
+	/*connection.query('DELETE FROM users WHERE user_id = 1', (error, results, fields) => {
 	  if (error) throw error;
 	  console.log('deleted ' + fields + ' rows');
-	});
+	});*/
 
 
 
@@ -96,7 +96,7 @@ connection.connect((err) => {
 	const RegistrationCtrl = new registrationCtrl();
 	const LoginCtrl = new loginCtrl();
 	const HomeCtrl = new homeCtrl();
-	const SeriesCtrl = new seriesCtrl();
+	const SeriesCtrl = new seriesCtrl(/*connection*/);
 
 
 

@@ -1,114 +1,188 @@
 //Generic DAO 
+const mysql = require('mysql');
+const user = require('../classDTO/userDTO.js');
+const yaml = require('yamljs');
 
-const connection = require('mysql');
+// yaml file for database connection
+const config = yaml.load('./../config/configDb.yml');
 
 class SQLmoves {
 
-	// En param, il faut passe le nom de la classe provenant du require('****')
-	constructor(className) {
-		this._className = className;
+	constructor() {
+
+		this.pool = mysql.createPool({
+			host     : config.default.database.host,
+			user     : config.default.database.user,
+			password : config.default.database.password,
+			database : config.default.database.dbname
+
+		})
+
 	}
+
+
+	// En param, il faut passer le nom de la classe provenant du require('****')
+	/*constructor(className) {
+		this._className = className;
+	}*/
 
 	
 
 	findAll(table) {
 
-		return new Promise((resolve, reject) => {
-
-			connection.query(`
-				SELECT * 
-				FROM ${table}`, (error, results, fields) => {
-
-				const listDTO = results.map(result =>  {
-					// return new userDTO(result.firstName, result.lastName, result.pseudo, result.password, result.age, result.description)
-					return new this._className(result.firstName, result.lastName, result.pseudo, result.password, result.age, result.description);
-				});
-
-				console.log(`Results : ${results}`);
-
-				resolve(listDTO);
-			});
-		});
-	}
-
-	findOne(name, table) {
 
 		return new Promise((resolve, reject) => {
-
-			connection.query(`
+			this.pool.query(`
 				SELECT * 
-				FROM ${table} 
-				WHERE name = ${name}`, (error, results, fields) => {
+				FROM ${table}`, 
 
-				const listDTO = result.map( result => {
+				(error, results, fields) => {
 
-					return new this._className(result)
-				})
-			});
-			
+				console.log(results);
+				resolve(results);
+
+			//const allResults = results;
+
+				return results;
+
+			})
 		})
 
+		
 	}
+
+
+
+	findOne(table, toSearch, condition) {
+
+		return new Promise((resolve, reject) => {
+
+			this.pool.query(
+
+				`SELECT * 
+				FROM ${table}
+				WHERE ${toSearch} = ?`, [condition], 
+
+				(error, results, fields) => {
+
+					console.log(results);
+					resolve(results);
+
+
+					return results;
+				})
+		})
+
+
+	}
+
+
 
 	findDecipher() {
 
 	}
 
-	insert(toInsert, title, table) {
+	insertUser(firstName, lastName, mail, pseudo, password, birthday, isModerator, isAdmin, sexe) {
 
-		connection.query(`
-			INSERT INTO ${table} 
-			SET ${title} = ${toInsert}`, (error, results, fields) => {
+		return new Promise((resolve, reject) => {
 
-		});
+			this.pool.query(`
+
+				INSERT INTO users ( firstName, lastName, mail, pseudo, password, birthday, informations, isModerator, isAdmin, sexe) 
+				SET ?`, {`firstName: ${firstName}, lastName: ${lastName}, mail: ${mail}, pseudo: ${pseudo}, password: ${password}, birthday: ${birthday}, isModerator: ${isModerator}, isAdmin: ${isAdmin}, sexe: ${sexe}`},
+
+				(error, results, fields) => {
+
+					console.log("INSERT with SUCCES");
+					resolve(results);
+
+					return results;
+			})
+		})
+
 
 	}
 
 
 
-	insertCipher(toInsert, table) {
+	insertCipher(table, condition, toInsert) {
 
 		const cryptPass = new Crypto(toInsert, config.default.crypt.algoCrypt, config.default.crypt.key );
 
 
-		cryptPass.cipher();
+		const ciphed = cryptPass.cipher();
+
+		return new Promise((resolve, reject) => {
+
+			this.pool.query(`
+				INSERT INTO ${table} 
+				SET ${condition} = ? `, [ciphed], 
+
+				(eror, results, fields) => {
+
+					console.log(results);
+					resolve(results);
+
+					return results;
 
 
-		connection.query(`INSERT INTO ${table} SET `);
+			})
+			
+		})
+
+
 	}
 
 
-	updateOne(table, toUpdate, condition, egal1, egal2 ) {
+	updateOne(table, condition1, condition2, egal1, egal2 ) {
 
-		connection.query(`
-			UPDATE ${table} 
-			SET ${toUpdate} = ? 
-			WHERE ${condition} = ?`, 
-			[egal1, egal2], (error, results, fields) => {
+		return new Promise((resolve, reject) => {
+
+			this.pool.query(`
+				UPDATE ${table} 
+				SET ${condition1} = ? 
+				WHERE ${condition2} = ?`, 
+				[egal1, egal2], 
+
+				(error, results, fields) => {
+
+					if (error) throw error;
+
+					console.log(`UPDATED table ${table}`);
+					resolve(results);
+					return results;
+				})
+			})
+
+	}
+
+
+	delete(table, condition, toDelete) {
+
+		return new Promise((resolve, reject) => {
+
+			this.pool.query(`
+				DELETE FROM ${table} 
+				WHERE ${condition} = ?`,[toDelete], 
+
+				(error, results, fields) => {
 
 				if (error) throw error;
-
-				console.log(`UPDATED table ${table}, ${egal1} become ${egal2} at ${toUpdate}`)
-			});
-	}
-
-	updateAll() {
-
-	}
-
-
-
-
-	delete(toDelete, table, condition) {
-
-		connection.query(`
-			DELETE FROM ${table} 
-			WHERE ${toDelete} = ${condition}`, (error, result, fields) => {
-
-			if (error) throw error;
-			console.log('deleted' + result.affectedRows + 'rows');
-
+				resolve(results);
+				console.log('deleted ' + toDelete);
+				return results;
+			})
 		})
+
+
+
+	}
+
+	addAdmin() {
+
+	}
+
+	addModerator() {
 
 
 	}

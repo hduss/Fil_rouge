@@ -1,5 +1,5 @@
 const crypto = require('../services/crypto.js');
-const connecttion = require('mysql');
+const connection = require('mysql');
 
 class CompareInfos {
 	

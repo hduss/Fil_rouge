@@ -22,8 +22,6 @@ class isValid {
 			return false;
 		}
 
-		console.log(compareMail);
-
 		// verifier si le mail est deja present dans la base de données 
 
 
@@ -32,7 +30,7 @@ class isValid {
 
 	validPseudo(userPseudo) {
 
-		if (userPseudo && userPseudo.length > 8) {
+		if (userPseudo && userPseudo.length > 6) {
 
 			console.log('PSEUDO VALID !');
 			return true;
@@ -77,7 +75,7 @@ class isValid {
 
 	validComparePassword(userPassword, verifPassword) {
 
-		if (userPassword && verifPassword && userPassword === verifPassword) {
+		if ((userPassword && verifPassword) && userPassword === verifPassword) {
 
 			console.log('VERIF PASSWORD OK !!!');
 			return true;
@@ -121,6 +119,15 @@ class isValid {
 
 			return false;
 		};
+	}
+
+	validSexe(sexe) {
+
+		if (sexe) {
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 

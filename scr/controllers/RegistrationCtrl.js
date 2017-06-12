@@ -5,6 +5,8 @@ const Crypto = require('../services/crypto.js');
 
 const config = yaml.load('./../config/configDb.yml');
 
+const SQLmoves = require('../repositoryDAO/SQLmoves.repository.js');
+
 
 class RegistrationCtrl {
 
@@ -30,61 +32,33 @@ class RegistrationCtrl {
 		let validPass = IsValid.validPassword(req.body.pass);
 		let validPassCompare = IsValid.validComparePassword(req.body.pass, req.body.passconfirm);
 		let validAge = IsValid.validAge(req.body.age);
+		let validSexe = IsValid.validSexe(req.body.sexe);
 
 
-		console.log('POST OK');
+
 
 		// all verifications for the registration form 
-		if (validMail) {
+		if (validFirstName && validLastName & validMail) {
 			VALID = true;
 
 			if (validPseudo) {
 				VALID = true;
 
-				if (validFirstName && validLastName && validAge) {
-
+				if ( validPass && validPassCompare) {
 
 
 					VALID = true;
-					if (validPass && validPassCompare) {
-//--------------------------change in DTO DAO--------------------
 
-						const cryptPass = new Crypto(req.body.pass, config.default.crypt.algoCrypt, config.default.crypt.key );
+					if (validAge && validSexe) {
 
-
-						cryptPass.cipher();
-
-						cryptPass.decipher();
-
-
-
-
-
-						//CRYPTAGE PASSWORD ! 
-						/*const passToCrypt = req.body.pass;
-
-						const algoCrypt = config.default.crypt.algoCrypt;
-
-						const key = config.default.crypt.key;
-						
-
-						const cipher = crypto.createCipher(algoCrypt,key);
-						const crypted = cipher.update(passToCrypt,'utf8','hex');
-						crypted += cipher.final('hex');
-
-
-						console.log(crypted);
-
-						// DECRYPT PASSWORD
-						const decipher = crypto.createDecipher(algoCrypt,key);
-						const dec = decipher.update(crypted,'hex','utf8');
-						dec += decipher.final('utf8');
-
-						console.log(dec);*/
-
+						console.log(validSexe.value);
 //--------------------------change in DTO DAO--------------------
 
 						VALID = true;
+
+
+//--------------------------change in DTO DAO--------------------
+
 					}else{
 
 						VALID = false;
@@ -96,7 +70,7 @@ class RegistrationCtrl {
 			}else{
 
 				VALID = false;
-			};
+			}
 
 		}else{
 
@@ -105,21 +79,33 @@ class RegistrationCtrl {
 
 		// if everything is valid / true
 		if (VALID) {
-
 			console.log('EVERYTHINGGUCCI !!');
-			// send data in Database
-			// envoi en BDD
+
+			let cryptPass = new Crypto(req.body.pass, config.default.crypt.algoCrypt, config.default.crypt.key );
+			let cryptMail = new Crypto(req.body.mail, config.default.crypt.algoCrypt, config.default.crypt.key);
+
+			cryptPass += cryptPass.cipher();
+			cryptMail += cryptMail.cipher();
+
+			console.log(cryptPass);
+			console.log(cryptMail);
+
+
+			const sqlmoves = new SQLmoves();
+
+			sqlmoves.insertUser(req.body.firstname, req.body.lastname, cryptMail, req.body.pseudo, cryptPass, req.body.age, 0, 0, req.body.sexe);
+
+			// appel a un cookie ou session
 
 			res.redirect('/');
 			// NEW USER
 		}else{
 
+			console.log('UNLOGGED :/');
+
 			res.redirect('/registration');
 		}
-		
-		
 
-		
 	}
 }
 
