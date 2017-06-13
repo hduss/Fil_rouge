@@ -4,7 +4,7 @@ const user = require('../classDTO/userDTO.js');
 const yaml = require('yamljs');
 
 // yaml file for database connection
-const config = yaml.load('./../config/configDb.yml');
+const config = yaml.load('config/configDb.yml');
 
 class SQLmoves {
 
@@ -82,18 +82,21 @@ class SQLmoves {
 
 	}
 
-	insertUser(firstName, lastName, mail, pseudo, password, birthday, isModerator, isAdmin, sexe) {
+	insertUser(firstName, lastName, mail, pseudo, password, birthday, informations, picture, isModerator, isAdmin, sexe) {
+
+		const values = {firstName: firstName, lastName: lastName, mail: mail, pseudo: pseudo, password: password, birthday: birthday, informations: informations, picture: picture, isModerator: isModerator, isAdmin: isAdmin, sexe: sexe};
 
 		return new Promise((resolve, reject) => {
 
-			this.pool.query(`
-
-				INSERT INTO users ( firstName, lastName, mail, pseudo, password, birthday, informations, isModerator, isAdmin, sexe) 
-				SET ?`, {`firstName: ${firstName}, lastName: ${lastName}, mail: ${mail}, pseudo: ${pseudo}, password: ${password}, birthday: ${birthday}, isModerator: ${isModerator}, isAdmin: ${isAdmin}, sexe: ${sexe}`},
+			this.pool.query("INSERT INTO users SET ?", values,
 
 				(error, results, fields) => {
 
-					console.log("INSERT with SUCCES");
+					console.log(results);
+					console.log(error);
+					console.log(fields);
+
+					
 					resolve(results);
 
 					return results;
@@ -105,7 +108,7 @@ class SQLmoves {
 
 
 
-	insertCipher(table, condition, toInsert) {
+	/*insertCipher(table, condition, toInsert) {
 
 		const cryptPass = new Crypto(toInsert, config.default.crypt.algoCrypt, config.default.crypt.key );
 
@@ -131,7 +134,7 @@ class SQLmoves {
 		})
 
 
-	}
+	}*/
 
 
 	updateOne(table, condition1, condition2, egal1, egal2 ) {

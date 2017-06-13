@@ -9,13 +9,11 @@ const twig = require ('twig');
 const yaml = require('yamljs');
 
 // yaml file for database connection
-const config = yaml.load('./../config/configDb.yml');
+const config = yaml.load('config/configDb.yml');
  	
 
 const bodyParser = require('body-parser');
 const session = require('express-session');
-
-
 
 
 
@@ -26,8 +24,6 @@ const connection = mysql.createConnection({
 	password : config.default.database.password,
 	database : config.default.database.dbname
 });
-
-
 
 
 

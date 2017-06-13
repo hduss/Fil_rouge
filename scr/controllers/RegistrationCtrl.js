@@ -3,7 +3,7 @@ const yaml = require('yamljs');
 const crypto = require('crypto');
 const Crypto = require('../services/crypto.js');
 
-const config = yaml.load('./../config/configDb.yml');
+const config = yaml.load('config/configDb.yml');
 
 const SQLmoves = require('../repositoryDAO/SQLmoves.repository.js');
 
@@ -93,11 +93,13 @@ class RegistrationCtrl {
 
 			const sqlmoves = new SQLmoves();
 
-			sqlmoves.insertUser(req.body.firstname, req.body.lastname, cryptMail, req.body.pseudo, cryptPass, req.body.age, 0, 0, req.body.sexe);
+			sqlmoves.insertUser(req.body.firstname, req.body.lastname, cryptMail, req.body.pseudo, cryptPass, req.body.age, null, "", 0, 0, req.body.sexe).then(results => res.redirect('/'));
+
+			
 
 			// appel a un cookie ou session
 
-			res.redirect('/');
+			//res.redirect('/');
 			// NEW USER
 		}else{
 

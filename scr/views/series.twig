@@ -2,6 +2,11 @@
 
 	<ul>
 	    {% for result in results %}
-	        <li>{{ result.firstName }}</li>
+	        <li>
+	        	<p>{{ result.nameSerie }}</p>
+	        	<p>{{ result.realisateur}}</p>
+	        	<div>{{ result.synopsisSerie}}</div>
+
+	        </li>
 	    {% endfor %}
 	</ul>

@@ -5,7 +5,7 @@ const userdto = require('../classDTO/userDTO.js');
 const yaml = require('yamljs');
 
 // yaml file for database connection
-const config = yaml.load('./../config/configDb.yml');
+const config = yaml.load('config/configDb.yml');
 
 
 
@@ -21,7 +21,7 @@ class SeriesCtrl {
 
 		const sqlmoves = new SQLmoves();
 
-		sqlmoves.delete('users', 'firstName', 'requin').then(
+		sqlmoves.findAll('series').then(
 			results => {
 				res.render('series.twig', {results: results});
 			}
